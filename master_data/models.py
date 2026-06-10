@@ -69,6 +69,13 @@ class Material(models.Model):
         ("other", "其他"),
     ]
 
+    CURRENCY_CHOICES = [
+        ("CNY", "人民币"),
+        ("USD", "美元"),
+        ("EUR", "欧元"),
+        ("JPY", "日元"),
+    ]
+
     code = models.CharField("物料编号", max_length=50, unique=True)
     name = models.CharField("物料名称", max_length=100)
     material_type = models.CharField("物料类型", max_length=30, choices=MATERIAL_TYPE_CHOICES)
@@ -83,6 +90,21 @@ class Material(models.Model):
 
     unit = models.CharField("单位", max_length=20, default="kg")
     safety_stock = models.DecimalField("安全库存", max_digits=12, decimal_places=3, default=0)
+
+    reference_price = models.DecimalField(
+        "参考采购单价",
+        max_digits=12,
+        decimal_places=4,
+        default=0,
+        help_text="仅作为参考价格。真实成本以后以采购单价和库存批次成本为准。",
+    )
+    currency = models.CharField(
+        "币种",
+        max_length=10,
+        choices=CURRENCY_CHOICES,
+        default="CNY",
+    )
+
     note = models.TextField("备注", blank=True)
     is_active = models.BooleanField("启用", default=True)
 

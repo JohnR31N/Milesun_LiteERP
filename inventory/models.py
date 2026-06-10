@@ -51,6 +51,14 @@ class StockBatch(models.Model):
     quantity = models.DecimalField("当前库存数量", max_digits=14, decimal_places=3, default=0)
     unit = models.CharField("单位", max_length=20, default="kg")
 
+    unit_cost = models.DecimalField(
+        "本批次成本单价",
+        max_digits=12,
+        decimal_places=4,
+        default=0,
+        help_text="这一批库存的实际成本单价。后续采购入库时会自动带入采购单价。",
+    )
+
     production_date = models.DateField("生产日期", null=True, blank=True)
     expiry_date = models.DateField("有效期", null=True, blank=True)
 
@@ -86,6 +94,13 @@ class StockBatch(models.Model):
 
         if self.quantity < 0:
             raise ValidationError("当前库存数量不能为负数。")
+
+        if self.unit_cost < 0:
+            raise ValidationError("本批次成本单价不能为负数。")
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.unit_cost
 
     @property
     def item_code(self):

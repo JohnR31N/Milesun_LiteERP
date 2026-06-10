@@ -14,6 +14,8 @@ class StockBatchAdmin(admin.ModelAdmin):
         "warehouse",
         "quantity",
         "unit",
+        "unit_cost",
+        "total_cost_display",
         "supplier",
         "is_active",
         "created_at",
@@ -32,6 +34,7 @@ class StockBatchAdmin(admin.ModelAdmin):
         "supplier__name",
     )
     readonly_fields = (
+        "total_cost_display",
         "created_at",
         "updated_at",
     )
@@ -51,11 +54,13 @@ class StockBatchAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "库存数量",
+            "库存数量与成本",
             {
                 "fields": (
                     "quantity",
                     "unit",
+                    "unit_cost",
+                    "total_cost_display",
                 )
             },
         ),
@@ -92,6 +97,10 @@ class StockBatchAdmin(admin.ModelAdmin):
     @admin.display(description="名称")
     def item_name_display(self, obj):
         return obj.item_name
+
+    @admin.display(description="库存金额")
+    def total_cost_display(self, obj):
+        return obj.total_cost
 
 
 @admin.register(StockMovement)

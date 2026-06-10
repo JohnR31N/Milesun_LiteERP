@@ -56,11 +56,47 @@ class MaterialAdmin(admin.ModelAdmin):
         "supplier",
         "unit",
         "safety_stock",
+        "reference_price",
+        "currency",
         "is_active",
     )
-    list_filter = ("material_type", "is_active")
+    list_filter = ("material_type", "currency", "is_active")
     search_fields = ("code", "name", "supplier__name")
     ordering = ("code",)
+
+    fieldsets = (
+        (
+            "基础信息",
+            {
+                "fields": (
+                    "code",
+                    "name",
+                    "material_type",
+                    "supplier",
+                    "unit",
+                )
+            },
+        ),
+        (
+            "库存与成本",
+            {
+                "fields": (
+                    "safety_stock",
+                    "reference_price",
+                    "currency",
+                )
+            },
+        ),
+        (
+            "其他信息",
+            {
+                "fields": (
+                    "note",
+                    "is_active",
+                )
+            },
+        ),
+    )
 
 
 @admin.register(Product)
